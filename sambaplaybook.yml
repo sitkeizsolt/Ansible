@@ -1,0 +1,37 @@
+- name: Create Samba share
+  hosts: sambaserver
+  become: true
+
+  roles:
+    - samba
+
+  vars:
+    samba_share_name: "sambashare"
+    samba_share_path: "{{ samba_share_path }}"
+
+  tasks:
+    - name: Install samba package
+      ansible.builtin.package:
+	name: "{{ samba_package_name }}"
+	state: present
+
+    - name: Create Samba share directory
+      ansible.builtin.file:
+	path "{{ samba_share_path }}"
+	state: directory
+	mode: '0755'
+
+    - name: Add Samba share to smb.conf
+      ansible.builtin.ini_file:
+	path: /etc/samba/smb.conf
+	section: "{{ samba_share_name }}"
+	option: read only
+	value: yes
+	state: present
+
+  handlers:
+    - name: Restart Samba
+      ansible.builtin.systemd:
+	name: smb
+	state: restarted
+

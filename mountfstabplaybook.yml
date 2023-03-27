@@ -1,0 +1,35 @@
+- name: Mount Samba share
+  hosts: mountfstab
+  become: true
+
+  tasks:
+    - name: Install cifs-utils
+      state: present
+
+    - name: Create mount directory
+      ansible.builtin.file:
+	path: "{{ mount_dir }}"
+	state: directory
+	mode: '0777'
+
+    - name: Get UUID of samba share
+      ansible.builtin.shell: blkid -s UUID -o value "{{ samba_share }}"
+      register: uuid_result
+
+    - name: Mount Samba share
+      ansible.builtin.mount:
+	path: "{{ mount_dir }}"
+	src: "{{ samba_share }}"
+	fstype: cifs
+	opts: "credentials={{ cred_file }},uid={{ uid }},gid={{ gid }},vers={{ cifs_version }},rw"
+	state: mounted
+      notify:
+	- Add to fstab
+
+  handlers:
+    - name: Add to fstab
+      ansible.builtin.lineinfile:
+	path: /etc/fstab
+	line: "UUID={{ uuid_result.stdout }} {{ mount_dir }} cifs credentials={{ cred_file }},uid={{ uid }},gid={{ gid }},vers={{ cifs_version }},rw 0 0"
+	state: present
+

@@ -1,0 +1,10 @@
+[sambaserver]
+servera.lab.example.com
+
+[mountfstab]
+serverb.lab.example.com
+serverc.lab.example.com
+
+[createdirectory]
+serverd.lab.example.com
+
