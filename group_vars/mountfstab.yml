@@ -1,0 +1,8 @@
+mount_dir: /data/speci
+samba_share: "{{ samba_share_name }}"
+cred_file: "{{ path }}"
+uid: 1000
+gid: 1000
+package_name: cifs-utils
+cifs_version: 3.0
+

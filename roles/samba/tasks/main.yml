@@ -1,0 +1,21 @@
+- name: Configure Samba
+  block:
+    - name: Set Samba workgroup name
+      ini_file:
+	path: /etc/samba/smb.conf
+	section: global
+	option: workgroup
+	value: WORKGROUP
+      notify: restart samba
+
+    - name: Allow Samba through firewall
+      ansible.builtin.firewalld:
+	service: samba
+	permanent: yes
+	state: enabled
+      notify: restart firewall
+  become: true
+
+- name: Restart services
+  meta: flush_handlers
+

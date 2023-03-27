@@ -1,0 +1,3 @@
+samba_workgroup: WORKGROUP
+samba_firewall_service: samba
+
