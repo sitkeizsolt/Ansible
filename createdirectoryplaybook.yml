@@ -1,14 +1,15 @@
+---
 - name: Create directory with owner and premissions
   hosts: createdirectory 
   gather_facts: no
 
   vars:
-    directory_path: "{{ path }}"
-    directory_owner: "user"
-    directory_group: "user"
+    directory_path: "/path/to/directory"
+    directory_owner: "student"
+    directory_group: "student"
     directory_mode: "0755"
 
-  tasks:
+  tasks: 
    - name: Create directory
      file:
 	path: "{{ directory_path }}"
@@ -16,4 +17,3 @@
 	mode: "{{ directory_mode }}"
 	owner: "{{ directory_owner }}"
 	group: "{{ directory_group }}"
-
